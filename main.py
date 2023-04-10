@@ -3,15 +3,19 @@ import math
 import torch
 import gpytorch
 from matplotlib import pyplot as plt
+import os
+import sys
+from src.cellData import cellData
 
-if '__ipython__':
+if "__ipython__":
+    sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(os.getcwd()))))
     %matplotlib widget
     %load_ext autoreload
     %autoreload 2
 
-# Training data is 100 points in [0,1] inclusive regularly spaced
-train_x = torch.linspace(0, 1, 100)
+if __name__ == "__main__":
+    cellDataObj = cellData()
+    cellDataObj.loadExampleDC()
+    cellDataObj.loadFullDataset()
 
-# True function is sin(2*pi*x) with Gaussian noise
-train_y = torch.sin(train_x * (2 * math.pi)) + torch.randn(train_x.size()) * math.sqrt(0.04)
-
+    print("Done")
