@@ -6,6 +6,8 @@ from matplotlib import pyplot as plt
 import os
 import sys
 from src.cellData import cellData
+import numpy as np
+import polars as pl
 
 if "__ipython__":
     sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(os.getcwd()))))
@@ -15,7 +17,7 @@ if "__ipython__":
 
 if __name__ == "__main__":
     cellDataObj = cellData()
-    cellDataObj.loadExampleDC()
-    cellDataObj.loadFullDataset()
+    cellDataObj.loadPMAttiaDataset()
+    cellDataObj.plotPMAttiaDataset()
 
     print("Done")
