@@ -127,3 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+oxford-battery-degradation-dataset/
+.DS_Store
