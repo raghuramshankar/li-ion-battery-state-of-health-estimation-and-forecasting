@@ -1,17 +1,30 @@
 import gpytorch
-import torch
 import pandas as pd
 from dataclasses import dataclass
-import src.cellData as cellData
+import gpytorch
+import numpy as np
 
 
 @dataclass
-class GPR:
-    dfPath: str
+class gpr(gpytorch.models.ExactGP):
+    df_path: str
 
     def __post_init__(self):
-        self.df = pd.read_csv(self.dfPath + "2017-05-12_6C-50per_3_6C_CH36.csv")
+        # self.df = pd.read_csv(self.df_path, skiprows=19)
+        self.df = pd.read_csv(self.df_path)
         self.df = self.df.iloc[:-2]
+        # self.df["Ageing_Time"] = pd.to_datetime(self.df["DateTime"])
+        self.df["Ageing_Time"] = self.df["Data_Point"]
+        # super(GPR, self).__init__(
+        #     train_inputs=self.df["Ageing_Time"], train_targets=self.df[""]
+        # )
+        self.soc = np.linspace(0, 1, 100)
 
-    def plotDFResistance(self):
-        self.df.plot.line(x="Data_Point", y="Internal_Resistance")
+    def ocv_lookup(self, soc_lookup):
+        return np.argmin(self.soc - soc_lookup)
+
+    # def cell_model(self, soc):
+    #     ocv_lookup =
+
+    def plot_df_resistance(self):
+        self.df.plot.line(x="Ageing_Time", y="Internal_Resistance")
