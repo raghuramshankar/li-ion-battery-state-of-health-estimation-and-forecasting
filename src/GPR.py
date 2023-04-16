@@ -46,7 +46,9 @@ class gpr(gpytorch.models.ExactGP):
         self.df_OCV_SOC = pd.DataFrame({"OCV": OCV, "SOC": SOC})
 
     def ocv_lookup(self, soc_lookup):
-        return np.argmin(self.soc - soc_lookup)
+        return self.df_OCV_SOC.iloc[
+            np.argmin(np.abs(self.df_OCV_SOC["SOC"] - soc_lookup))
+        ]
 
     def plot_df_resistance(self):
         self.df.plot.line(x="Ageing_Time", y="Internal_Resistance")
