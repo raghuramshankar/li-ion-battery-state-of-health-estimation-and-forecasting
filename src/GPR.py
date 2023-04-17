@@ -3,6 +3,7 @@ import pandas as pd
 from dataclasses import dataclass
 import gpytorch
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 @dataclass
@@ -18,25 +19,25 @@ class gpr(gpytorch.models.ExactGP):
         first_cycle_df = self.df[self.df["Cycle_Index"] == 0]
 
         # get chg OCV
-        df_chgOCV = first_cycle_df[first_cycle_df["Step_Index"] == 5][
+        self.df_chgOCV_SOC = first_cycle_df[first_cycle_df["Step_Index"] == 5][
             ["Voltage", "Charge_Capacity"]
         ]
 
         # get dchg OCV
-        df_dchgOCV = first_cycle_df[first_cycle_df["Step_Index"] == 6][
+        self.df_dchgOCV_SOC = first_cycle_df[first_cycle_df["Step_Index"] == 6][
             ["Voltage", "Discharge_Capacity"]
         ]
 
         # get discharge capacity
         self.capacity = (
-            df_dchgOCV["Discharge_Capacity"].iloc[-1]
-            - df_dchgOCV["Discharge_Capacity"].iloc[0]
+            self.df_dchgOCV_SOC["Discharge_Capacity"].iloc[-1]
+            - self.df_dchgOCV_SOC["Discharge_Capacity"].iloc[0]
         )
 
         # get OCV as average of dchg and chg OCV
         OCV = (
-            (df_chgOCV["Voltage"].to_numpy())[0 : len(df_dchgOCV)]
-            + np.flip(df_dchgOCV["Voltage"].to_numpy())
+            (self.df_chgOCV_SOC["Voltage"].to_numpy())[0 : len(self.df_dchgOCV_SOC)]
+            + np.flip(self.df_dchgOCV_SOC["Voltage"].to_numpy())
         ) / 2
 
         # get SOC points from OCV
@@ -49,12 +50,24 @@ class gpr(gpytorch.models.ExactGP):
         self.df.plot.line(x="Ageing_Time", y="Internal_Resistance")
 
     def plot_ocv_soc(self):
-        self.df_OCV_SOC.plot.line(x="SOC", y="OCV")
+        _, ax = plt.subplots()
+        self.df_OCV_SOC.plot.line(x="SOC", y="OCV", ax=ax)
+        plt.plot(
+            self.df_OCV_SOC["SOC"],
+            self.df_chgOCV_SOC["Voltage"][0 : len(self.df_OCV_SOC)],
+            label="Charge",
+        )
+        plt.plot(
+            self.df_OCV_SOC["SOC"],
+            np.flip(self.df_dchgOCV_SOC["Voltage"]),
+            label="Disharge",
+        )
+        plt.legend()
 
     def ocv_lookup(self, soc_lookup):
         return self.df_OCV_SOC.iloc[
             np.argmin(np.abs(self.df_OCV_SOC["SOC"] - soc_lookup))
         ]["OCV"]
 
-    def model_r0(self, soc, I, r0):
+    def model(self, soc, I, r0):
         return self.ocv_lookup(soc) + I * r0
