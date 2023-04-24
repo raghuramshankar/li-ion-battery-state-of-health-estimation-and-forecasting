@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 
 @dataclass
-class cellData:
+class cell_data:
     df_path: str
 
     def __post_init__(self):
