@@ -23,14 +23,14 @@ if __name__ == "__main__":
     # gpr_obj.df.loc[
     #     (
     #         (gpr_obj.df["Cycle_Index"] > 1)
-    #         & (gpr_obj.df["Cycle_Index"] < 5000)
+    #         & (gpr_obj.df["Cycle_Index"] < 50)
     #         & (gpr_obj.df["Current"] < -1)
     #     )
-    # ].plot.scatter(x="Data_Point", y="Internal_Resistance", figsize=(8, 5))
+    # ].plot.scatter(x="Data_Point", y="Voltage", figsize=(8, 5))
 
-    gpr_obj.fit_df.plot.line(
-        x="Ageing_Time", y=["Voltage", "OCV"], style=".", figsize=(8, 5)
-    )
+    gpr_obj.fit_df.loc[
+        (gpr_obj.fit_df["Cycle_Index"] > 1) & (gpr_obj.fit_df["Cycle_Index"] < 50)
+    ].plot.line(x="Ageing_Time", y=["R0"], style=".", figsize=(8, 5))
     plt.show()
 
     print("Done")
