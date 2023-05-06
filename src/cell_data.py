@@ -15,33 +15,6 @@ class cell_data:
         # add ageing time
         self.df["Ageing_Time"] = self.df["Data_Point"]
 
-        # add cycle time
-        # def add_cycle_time(row):
-        #     x = row["Step_Time"]
-        #     if row["Step_Index"] == 7:
-        #         x = x
-        #     else:
-        #         x = row["Cycle_Time"] + row["Step_Time_Shifted"]
-        #     return x
-
-        # self.df["Cycle_Time"] = np.zeros((len(self.df), 1))
-        # self.df["Step_Time_Shifted"] = self.df["Step_Time"].shift()
-        # self.df["Cycle_Time"] = self.df.apply(add_cycle_time, axis=1)
-
-        Cycle_Time = np.zeros((len(self.df), 1))
-        # Cycle_Time = [
-        #     self.df["Step_Time"].iloc[k - 1] + Cycle_Time[k]
-        #     for k in range(0, len(self.df) - 1)
-        #     if self.df["Discharge_Capacity"].iloc[k] != 0
-        # ]
-        for idx in range(1, len(self.df)):
-            if self.df["Discharge_Capacity"].iloc[idx] < 1e-6:
-                Cycle_Time[idx] = Cycle_Time[idx - 1] + self.df["Step_Time"].iloc[idx]
-            else:
-                Cycle_Time[idx] = 0
-
-        self.df["Cycle_Time"] = Cycle_Time
-
         # get first cycle for OCV
         first_cycle_df = self.df[self.df["Cycle_Index"] == 0]
 
@@ -91,14 +64,3 @@ class cell_data:
         )
         plt.legend()
         plt.ylabel("Voltage")
-
-    def ocv_lookup(self, soc_lookup):
-        return self.df_OCV_SOC.iloc[
-            np.argmin(np.abs(self.df_OCV_SOC["SOC"] - soc_lookup))
-        ]["OCV"]
-
-    def model(self, soc, I, r0):
-        return self.ocv_lookup(soc) + I * r0
-
-    def fit_r0(self, cycle_index):
-        pass
