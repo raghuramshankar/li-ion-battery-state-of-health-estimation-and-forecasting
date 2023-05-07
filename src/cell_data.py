@@ -93,4 +93,6 @@ class cell_data:
         self.fit_df["SOC"] = 1 - self.fit_df["Discharge_Capacity"] / self.capacity
         self.fit_df["OCV"] = self.fit_df["SOC"].apply(lambda x: self.ocv_lookup(x))
         self.fit_df["Total_Resistance_Estimate"] = self.fit_df.apply(self.model, axis=1)
+
+        # average the total resistance across SOC during each discharge
         self.train_df = self.fit_df.groupby("Cycle_Index").mean()
