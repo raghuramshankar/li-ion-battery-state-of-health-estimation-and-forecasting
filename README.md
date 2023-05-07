@@ -1,4 +1,5 @@
 # Li-ion Battery State of Health Estimation and Forecasting using Gaussian Process Regression
+- Estimate and forecast internal resistance using Gaussian Process Regression
 
 ## Open Source Datasets Used:
 ### [Data-driven prediction of battery cycle life before capacity degradation](https://data.matr.io/1/projects/5c48dd2bc625d700019f3204)
@@ -11,4 +12,4 @@
 
 ## Gaussian Process Regression:
 - Batch GPR using [GPyTorch](https://github.com/cornellius-gp/gpytorch)
-- Recursive GPR using Kalman Filter and RTS Smoother (See references)
+- Recursive GPR using Kalman Filter and RTS Smoother

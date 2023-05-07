@@ -37,10 +37,18 @@ class cell_data:
         )
 
         # get OCV as average of dchg and chg OCV
-        OCV = (
-            (self.df_chgOCV_SOC["Voltage"].to_numpy())[0 : len(self.df_dchgOCV_SOC)]
-            + np.flip(self.df_dchgOCV_SOC["Voltage"].to_numpy())
-        ) / 2
+        if len(self.df_chgOCV_SOC) > len(self.df_dchgOCV_SOC):
+            OCV = (
+                (self.df_chgOCV_SOC["Voltage"].to_numpy())[0 : len(self.df_dchgOCV_SOC)]
+                + np.flip(self.df_dchgOCV_SOC["Voltage"].to_numpy())
+            ) / 2
+        else:
+            OCV = (
+                (self.df_chgOCV_SOC["Voltage"].to_numpy())
+                + np.flip(self.df_dchgOCV_SOC["Voltage"].to_numpy())[
+                    0 : len(self.df_chgOCV_SOC)
+                ]
+            ) / 2
 
         # get SOC points from OCV
         SOC = np.linspace(0, 1, len(OCV))

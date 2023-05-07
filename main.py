@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
     gpr_obj = batch_gpr(
-        df_path="datasets/pmattia-dataset/2017-06-30_4_65C-44per_5C_CH22.csv"
+        df_path="datasets/pmattia-dataset/2017-06-30_3_6C-80per_3_6C_CH2.csv"
     )
     gpr_obj.get_OCV_SOC()
     gpr_obj.fit_r0()
