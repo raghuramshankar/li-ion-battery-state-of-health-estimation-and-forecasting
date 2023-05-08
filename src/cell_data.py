@@ -85,9 +85,10 @@ class cell_data:
 
     def model(self, row):
         """return total resistance"""
-        if (row["Voltage"] - row["OCV"]) / row["Current"] > 5e-1:
+        total_resistance = (row["Voltage"] - row["OCV"]) / row["Current"]
+        if total_resistance > 5e-1 or total_resistance < 1e-5:
             return np.nan
-        return (row["Voltage"] - row["OCV"]) / row["Current"]
+        return total_resistance
 
     def fit_r0(self):
         """get the training df with total resistance"""

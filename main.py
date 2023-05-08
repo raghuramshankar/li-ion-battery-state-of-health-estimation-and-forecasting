@@ -6,9 +6,9 @@ from src.kalman_gpr import kalman_gpr
 import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
-    gpr_obj = batch_gpr(
-        df_path="datasets/pmattia-dataset/2017-06-30_3_6C-80per_3_6C_CH2.csv"
-    )
+    dataset_path = "datasets/pmattia-dataset/"
+    file_path = "2017-06-30_6C-40per_4C_CH45.csv"
+    gpr_obj = batch_gpr(df_path=dataset_path + file_path)
     gpr_obj.get_OCV_SOC()
     gpr_obj.fit_r0()
 
