@@ -8,14 +8,14 @@ import matplotlib.pyplot as plt
 class cell_data:
     df_path: str
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.df = pd.read_csv(self.df_path)
         self.df = self.df.iloc[:-2]
 
         # add ageing time
         self.df["Ageing_Time"] = self.df["Data_Point"]
 
-    def get_OCV_SOC(self):
+    def get_OCV_SOC(self) -> None:
         """get the OCV SOC curve from the first cycle data"""
         # get first cycle for OCV
         first_cycle_df = self.df[self.df["Cycle_Index"] == 0]
@@ -56,11 +56,11 @@ class cell_data:
         # store OCV SOC as a df
         self.df_OCV_SOC = pd.DataFrame({"OCV": OCV, "SOC": SOC})
 
-    def plot_df_resistance(self):
+    def plot_df_resistance(self) -> None:
         """plot the Internal_Resistance of dataset"""
         self.df.plot.line(x="Ageing_Time", y="Internal_Resistance")
 
-    def plot_ocv_soc(self):
+    def plot_ocv_soc(self) -> None:
         """plot the OCV SOC curve extracted from dataset"""
         _, ax = plt.subplots()
         self.df_OCV_SOC.plot.line(x="SOC", y="OCV", ax=ax)
@@ -83,14 +83,14 @@ class cell_data:
             np.argmin(np.abs(self.df_OCV_SOC["SOC"] - soc_lookup))
         ]["OCV"]
 
-    def model(self, row):
+    def model(self, row) -> float:
         """return total resistance"""
         total_resistance = (row["Voltage"] - row["OCV"]) / row["Current"]
         if total_resistance > 5e-1 or total_resistance < 1e-5:
             return np.nan
         return total_resistance
 
-    def fit_r0(self):
+    def fit_r0(self) -> None:
         """get the training df with total resistance"""
         self.fit_df = self.df.loc[
             (
