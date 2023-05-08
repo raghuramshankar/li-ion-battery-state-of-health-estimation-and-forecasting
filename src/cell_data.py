@@ -2,6 +2,7 @@ import pandas as pd
 from dataclasses import dataclass
 import numpy as np
 import matplotlib.pyplot as plt
+import ray
 
 
 @dataclass
@@ -105,3 +106,9 @@ class cell_data:
 
         # average the total resistance across SOC during each discharge
         self.train_df = self.fit_df.groupby("Cycle_Index").mean()
+
+    @ray.remote
+    def fit_r0_loop(self) -> pd.DataFrame:
+        self.get_OCV_SOC()
+        self.fit_r0()
+        return self.train_df
