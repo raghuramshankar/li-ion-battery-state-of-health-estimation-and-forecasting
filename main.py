@@ -51,11 +51,11 @@ if __name__ == "__main__":
     model.train()
     likelihood.train()
     optimizer = torch.optim.Adam(
-        model.parameters(), lr=0.5
+        model.parameters(), lr=0.1
     )  # Includes GaussianLikelihood parameters
 
     mll = gpytorch.mlls.ExactMarginalLogLikelihood(likelihood, model)
-    training_iter = 50
+    training_iter = 200
     for i in range(training_iter):
         # Zero gradients from previous iteration
         optimizer.zero_grad()
@@ -79,7 +79,7 @@ if __name__ == "__main__":
     # Make predictions by feeding model through likelihood
     # with torch.no_grad(), gpytorch.settings.fast_pred_var():
     with torch.no_grad():
-        test_x = train_x * 2
+        test_x = train_x * 1.1
         observed_pred = likelihood(model(test_x))
 
         # Initialize plot
